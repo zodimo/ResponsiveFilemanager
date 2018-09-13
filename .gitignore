@@ -16,3 +16,5 @@ filemanager/css/*
 resources/tmp/*
 filemanager/plugin.min.js
 tinymce/plugins/responsivefilemanager/plugin.min.js
+
+.idea/*

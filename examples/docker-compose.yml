@@ -1,0 +1,12 @@
+version: "3.3"
+services:
+  app:
+    container_name: responsiveFilemanager-app
+    image: php:7.1-apache
+    volumes:
+      - ../filemanager:/var/www/html/filemanager
+      - ./index.php:/var/www/html/index.php
+      - ../upload_dir:/var/www/html/uploads/
+      - ../source:/var/www/html/source/
+    ports:
+      - 80:80
