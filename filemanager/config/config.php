@@ -1,4 +1,10 @@
 <?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Psr\Container\ContainerInterface;
+use function DI\factory;
+
 $version = "9.13.4";
 if (session_id() == '') session_start();
 
@@ -57,6 +63,40 @@ define('DEBUG_ERROR_MESSAGE', false); // TRUE or FALSE
 
 $config = array(
 
+    /*
+     * DI configuration
+     */
+    'SdkArgs'=>array(
+        'region' => 'us-east-1',
+        'version' => 'latest',
+
+
+        'credentials' => array(
+            'key' => 'accessKey1',
+            'secret' => 'verySecretKey1',
+        ),
+
+//        'use_dual_stack_endpoint'=>true,
+//        'use_accelerate_endpoint'=>true,
+//        'debug'=>true,
+    ),
+    'S3Bucket'=>'superman',
+    'S3Args'=>array(
+        'endpoint'=>'http://storage:8000',
+//        'use_path_style_endpoint'=>true,
+
+    ),
+    'S3Client'=>function (ContainerInterface $c) {
+        return (new \Aws\Sdk($c->get('SdkArgs')))->createS3($c->get('S3Args'));
+    },
+    'Adapter'=>function (ContainerInterface $c) {
+        return new \League\Flysystem\AwsS3v3\AwsS3Adapter($c->get('S3Client'),$c->get('S3Bucket'));
+    },
+    'Filesystem' => function (ContainerInterface $c) {
+        return new \League\Flysystem\Filesystem($c->get('Adapter'));
+    },
+
+//    \League\Flysystem\FilesystemInterface::class => DI\create(\League\Flysystem\Filesystem::class),
 	/*
 	|--------------------------------------------------------------------------
 	| DON'T TOUCH (base url (only domain) of site).

@@ -1,8 +1,10 @@
 version: "3.3"
 services:
   app:
-    container_name: responsiveFilemanager-app
-    image: php:7.1-apache
+    container_name: filemanager-app
+    build:
+      context: .
+#    image: php:7.1-apache
     volumes:
       - ../filemanager:/var/www/html/filemanager
       - ./index.php:/var/www/html/index.php
@@ -10,3 +12,23 @@ services:
       - ../source:/var/www/html/source/
     ports:
       - 80:80
+    networks:
+      - internal
+    environment:
+      XDEBUG_CONFIG: "remote_host=172.17.0.1"
+      PHP_IDE_CONFIG: "serverName=filemanager-app"
+
+
+  storage:
+    container_name: filemanager-s3
+    image: scality/s3server:latest
+    volumes:
+      - ../source:/fakes3_root
+    ports:
+      - "8000:8000"
+    networks:
+      - internal
+
+networks:
+  internal:
+

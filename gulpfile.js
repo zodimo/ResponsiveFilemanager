@@ -89,3 +89,12 @@ elixir(function (mix) {
         'filemanager/js/modernizr.custom.js'
     );
 });
+
+var composer = require("gulp-composer");
+
+composer({
+    bin: "php ./composer.phar",
+});
+composer('update',{
+    bin: "php ./composer.phar",
+});

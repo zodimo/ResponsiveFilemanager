@@ -1,0 +1,13 @@
+{
+  "name": "zodimo/ResponsiveFilemanager",
+  "type": "project",
+  "require": {
+    "php-di/php-di": "^6.0",
+    "aws/aws-sdk-php": "3.67.12",
+    "league/flysystem-aws-s3-v3": "^1.0"
+  },
+  "minimum-stability": "stable",
+  "config": {
+    "vendor-dir": "filemanager/vendor"
+  }
+}

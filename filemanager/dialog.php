@@ -1,5 +1,50 @@
 <?php
 
+/** @var \DI\Container $container */
+$container = require 'config/bootstrap.php';
+
+try {
+    //Create bucket if not exist...
+
+    $s3_bucket=$container->get('S3Bucket');
+    /** @var \Aws\S3\S3Client $s3 */
+    $s3=$container->get('S3Client');
+
+//    if(!$s3->doesBucketExist($s3_bucket))
+//        $s3->createBucket(array('Bucket'=>$s3_bucket));
+//
+//    /** @var \League\Flysystem\Filesystem $filesystem */
+    $filesystem = $container->get('Filesystem');
+//    addSampleContent($filesystem);
+    $list=$filesystem->listContents('',true);
+    print_r($list);
+    exit();
+
+
+
+}catch (DI\NotFoundException $e){
+    //Its okey, lets do it the old way..
+    echo "Let do th old way...";
+
+}
+
+
+function addSampleContent($filesystem){
+    /** @var \League\Flysystem\Filesystem $filesystem */
+    for ($m=0;$m<10;$m++){
+        $dir='directory-'.$m;
+        for ($n=0;$n<10;$n++){
+            $content="file number $n";
+            $file=$dir."/file-".$n.".txt";
+            echo $filesystem->put($file,$content);
+        }
+    }
+
+}
+
+//var_dump($filesystem);
+//exit();
+
 $time = time();
 
 $config = include 'config/config.php';
@@ -102,6 +147,11 @@ if (!empty($_SESSION['RF']["subfolder"])
 
 if ($rfm_subfolder != "" && $rfm_subfolder[strlen($rfm_subfolder)-1] != "/") { $rfm_subfolder .= "/"; }
 
+/**
+ * TODO
+ * Convert this....
+ */
+
 $ftp=ftp_con($config);
 
 if (($ftp && !$ftp->isDir($config['ftp_base_folder'].$config['upload_dir'].$rfm_subfolder.$subdir)) || (!$ftp && !file_exists($config['current_path'].$rfm_subfolder.$subdir)))
@@ -115,6 +165,11 @@ $cur_dir		= $config['upload_dir'].$rfm_subfolder.$subdir;
 $cur_path		= $config['current_path'].$rfm_subfolder.$subdir;
 $thumbs_path	= $config['thumbs_base_path'].$rfm_subfolder;
 $parent			= $rfm_subfolder.$subdir;
+
+/**
+ * TODO
+ * Convert this....
+ */
 
 if($ftp){
 	$cur_dir = $config['ftp_base_folder'].$cur_dir;
@@ -631,6 +686,14 @@ $get_params = http_build_query($get_params);
 <?php
 $class_ext = '';
 $src = '';
+
+/**
+ * TODO
+ * Convert this.... from filesystem to native format....
+ * or convert to filesystem format....
+ */
+
+
 if($ftp){
 	try{
 		$files = $ftp->scanDir($config['ftp_base_folder'].$config['upload_dir'].$rfm_subfolder.$subdir);
@@ -932,7 +995,13 @@ $files=$sorted;
 	<!-- breadcrumb div end -->
 	<div class="row-fluid ff-container">
 	<div class="span12">
-		<?php if( ($ftp && !$ftp->isDir($config['ftp_base_folder'].$config['upload_dir'].$rfm_subfolder.$subdir))  || (!$ftp && @opendir($config['current_path'].$rfm_subfolder.$subdir)===FALSE)){ ?>
+		<?php
+        /**
+         * TODO
+         * Convert this....
+         */
+
+        if( ($ftp && !$ftp->isDir($config['ftp_base_folder'].$config['upload_dir'].$rfm_subfolder.$subdir))  || (!$ftp && @opendir($config['current_path'].$rfm_subfolder.$subdir)===FALSE)){ ?>
 		<br/>
 		<div class="alert alert-error">There is an error! The upload folder there isn't. Check your config.php file. </div>
 		<?php }else{ ?>
@@ -1063,7 +1132,14 @@ $files=$sorted;
 				if(strlen($file_array['extension'])===0){
 					$filename = $file;
 				}
-				if(!$ftp){
+
+                /**
+                 * TODO
+                 * Convert this....
+                 */
+
+
+                if(!$ftp){
 					$file_path=$config['current_path'].$rfm_subfolder.$subdir.$file;
 					//check if file have illegal caracter
 
@@ -1105,7 +1181,13 @@ $files=$sorted;
 					$is_img=true;
 
 					$img_width = $img_height = "";
-					if($ftp){
+                    /**
+                     * TODO
+                     * Convert this....
+                     */
+
+
+                    if($ftp){
 						$mini_src = $src_thumb = $config['ftp_base_url'].$config['ftp_thumbs_dir'].$subdir. $file;
 						$creation_thumb_path = "/".$config['ftp_base_folder'].$config['ftp_thumbs_dir'].$subdir. $file;
 					}else{
